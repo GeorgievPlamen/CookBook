@@ -3,7 +3,7 @@ using CookBook.API.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSqlServer<CookBookContext>(builder.Configuration.GetConnectionString("SQL"));
+builder.Services.AddSqlite<CookBookContext>(builder.Configuration.GetConnectionString("SQLITE"));
 
 var app = builder.Build();
 

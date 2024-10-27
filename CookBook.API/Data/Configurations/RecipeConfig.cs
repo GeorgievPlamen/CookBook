@@ -16,7 +16,9 @@ public class RecipeConfig : IEntityTypeConfiguration<Recipe>
             .HasColumnName("ImageBlob");
 
         builder.Property(x => x.Type)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(50)
+            .HasConversion<string>();
 
         builder.Property(x => x.Instructions)
             .HasMaxLength(1000)

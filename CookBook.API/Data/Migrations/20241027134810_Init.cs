@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CookBook.API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,10 +15,10 @@ namespace CookBook.API.Data.Migrations
                 name: "Cooks",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PassowrdHash = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,8 +29,8 @@ namespace CookBook.API.Data.Migrations
                 name: "Ingredients",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,13 +41,13 @@ namespace CookBook.API.Data.Migrations
                 name: "Recipes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Instructions = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    TimeToPrepare = table.Column<TimeSpan>(type: "time", nullable: false),
-                    ImageBlob = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CookId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Instructions = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
+                    Type = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    TimeToPrepare = table.Column<TimeSpan>(type: "TEXT", nullable: false),
+                    ImageBlob = table.Column<byte[]>(type: "BLOB", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,8 +64,8 @@ namespace CookBook.API.Data.Migrations
                 name: "IngredientRecipe",
                 columns: table => new
                 {
-                    IngredientsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RecipesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    IngredientsId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RecipesId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

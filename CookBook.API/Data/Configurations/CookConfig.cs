@@ -12,7 +12,7 @@ public class CookConfig : IEntityTypeConfiguration<Cook>
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(x => x.PassowrdHash)
+        builder.Property(x => x.PasswordHash)
             .HasMaxLength(200);
 
         builder.HasMany(x => x.Recipes)
