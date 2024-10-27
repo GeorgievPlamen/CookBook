@@ -3,6 +3,7 @@ using System.Text;
 using CookBook.API.Data;
 using CookBook.API.Features.Authentication;
 using CookBook.API.Features.Authentication.Interfaces;
+using CookBook.API.Features.Ingredients;
 using CookBook.API.Services;
 using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
@@ -29,5 +30,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthentication();
+app.MapIngredients();
 
 app.Run();

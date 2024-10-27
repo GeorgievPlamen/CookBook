@@ -20,7 +20,7 @@ public static class AuthenticationEndpoint
         auth.MapPost("/register", RegisterAsync).AddEndpointFilter<ValidationFilter<RegisterRequest>>();
     }
 
-    private static async Task<Results<Ok<Cook>, ProblemHttpResult>> GetMeAsync(
+    public static async Task<Results<Ok<Cook>, ProblemHttpResult>> GetMeAsync(
         HttpContext httpContext,
         CookBookContext context,
         CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ public static class AuthenticationEndpoint
         return TypedResults.Ok(foundUser);
     }
 
-    private static async Task<Results<Ok<AuthResponse>, ProblemHttpResult>> RegisterAsync(
+    public static async Task<Results<Ok<AuthResponse>, ProblemHttpResult>> RegisterAsync(
         RegisterRequest registerRequest,
         CookBookContext context,
         IJwtGenerator jwtGenerator,
