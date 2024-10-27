@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookBook.API.Data.Migrations
 {
     [DbContext(typeof(CookBookContext))]
-    [Migration("20241027134810_Init")]
+    [Migration("20241027170244_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -42,6 +42,9 @@ namespace CookBook.API.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Cooks");
                 });

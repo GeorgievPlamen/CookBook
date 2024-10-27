@@ -4,6 +4,7 @@ using CookBook.API.Data;
 using CookBook.API.Data.Models;
 using CookBook.API.Features.Authentication.DTOs;
 using CookBook.API.Features.Authentication.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookBook.API.Features.Authentication;
@@ -19,7 +20,7 @@ public static class AuthenticationEndpoint
         auth.MapPost("/register", RegisterAsync).AddEndpointFilter<ValidationFilter<RegisterRequest>>();
     }
 
-    private static async Task<IResult> GetMeAsync(
+    private static async Task<Results<Ok<Cook>, ProblemHttpResult>> GetMeAsync(
         HttpContext httpContext,
         CookBookContext context,
         CancellationToken cancellationToken)
@@ -28,17 +29,24 @@ public static class AuthenticationEndpoint
 
         var foundUser = await context.Cooks.FirstOrDefaultAsync(x => x.Email == emailFromClaim, cancellationToken);
 
-        if (foundUser is null) return TypedResults.NotFound();
+        if (foundUser is null) return TypedResults.Problem(statusCode: StatusCodes.Status404NotFound);
 
         return TypedResults.Ok(foundUser);
     }
 
-    private static async Task<IResult> RegisterAsync(
+    private static async Task<Results<Ok<AuthResponse>, ProblemHttpResult>> RegisterAsync(
         RegisterRequest registerRequest,
         CookBookContext context,
         IJwtGenerator jwtGenerator,
         CancellationToken cancellationToken)
     {
+        var alreadyRegisteredUser = await context.Cooks.FirstOrDefaultAsync(x => x.Email == registerRequest.Email, cancellationToken);
+
+        if (alreadyRegisteredUser is not null)
+            return TypedResults.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                detail: $"Already registered with email: '{registerRequest.Email}'.");
+
         var cook = new Cook
         {
             Email = registerRequest.Email,
@@ -57,7 +65,7 @@ public static class AuthenticationEndpoint
         return TypedResults.Ok(result);
     }
 
-    public static async Task<IResult> LoginAsync(
+    public static async Task<Results<Ok<AuthResponse>, ProblemHttpResult>> LoginAsync(
         LoginRequest loginRequest,
         CookBookContext context,
         IJwtGenerator jwtGenerator,
@@ -66,7 +74,10 @@ public static class AuthenticationEndpoint
 
         var foundCook = await context.Cooks.FirstOrDefaultAsync(x => x.Email == loginRequest.Email, cancellationToken);
 
-        if (foundCook is null) return TypedResults.NotFound();
+        if (foundCook is null)
+            return TypedResults.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Password is wrong or no user with email: '{loginRequest.Email}' found.");
 
         var token = jwtGenerator.GenerateJwt(foundCook.Email, foundCook.Email);
 

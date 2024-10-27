@@ -85,6 +85,12 @@ namespace CookBook.API.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cooks_Email",
+                table: "Cooks",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_IngredientRecipe_RecipesId",
                 table: "IngredientRecipe",
                 column: "RecipesId");

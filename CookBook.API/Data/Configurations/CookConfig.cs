@@ -21,5 +21,7 @@ public class CookConfig : IEntityTypeConfiguration<Cook>
         builder.Property(x => x.Email)
             .HasMaxLength(100)
             .IsRequired();
+
+        builder.HasIndex(x => x.Email).IsUnique();
     }
 }
