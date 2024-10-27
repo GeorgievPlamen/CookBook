@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using CookBook.API.Features.Authentication.Services;
+using CookBook.API.Features.Authentication.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CookBook.API.Services;

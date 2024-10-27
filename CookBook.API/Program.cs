@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Text;
 using CookBook.API.Data;
 using CookBook.API.Features.Authentication;
-using CookBook.API.Features.Authentication.Services;
+using CookBook.API.Features.Authentication.Interfaces;
 using CookBook.API.Services;
 using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +20,7 @@ builder.Services.AddAuthentication().AddJwtBearer(opt => opt.TokenValidationPara
 builder.Services.AddAuthorization();
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(x => x.AllowAnyOrigin()));
 builder.Services.AddSingleton<IJwtGenerator, JwtGenerator>();
+builder.Services.AddSingleton<IPasswordManager, PasswordManager>();
 
 var app = builder.Build();
 

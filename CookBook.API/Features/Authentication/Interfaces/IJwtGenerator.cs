@@ -1,4 +1,4 @@
-namespace CookBook.API.Features.Authentication.Services;
+namespace CookBook.API.Features.Authentication.Interfaces;
 
 public interface IJwtGenerator
 {

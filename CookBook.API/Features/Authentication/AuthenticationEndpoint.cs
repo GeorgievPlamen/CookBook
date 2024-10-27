@@ -3,7 +3,7 @@ using CookBook.API.Common.Filters;
 using CookBook.API.Data;
 using CookBook.API.Data.Models;
 using CookBook.API.Features.Authentication.DTOs;
-using CookBook.API.Features.Authentication.Services;
+using CookBook.API.Features.Authentication.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +38,7 @@ public static class AuthenticationEndpoint
         RegisterRequest registerRequest,
         CookBookContext context,
         IJwtGenerator jwtGenerator,
+        IPasswordManager passwordManager,
         CancellationToken cancellationToken)
     {
         var alreadyRegisteredUser = await context.Cooks.FirstOrDefaultAsync(x => x.Email == registerRequest.Email, cancellationToken);
@@ -51,7 +52,7 @@ public static class AuthenticationEndpoint
         {
             Email = registerRequest.Email,
             Name = registerRequest.Name,
-            PasswordHash = registerRequest.Password
+            PasswordHash = passwordManager.HashPassword(registerRequest.Password)
         };
 
         context.Add(cook);
@@ -69,15 +70,20 @@ public static class AuthenticationEndpoint
         LoginRequest loginRequest,
         CookBookContext context,
         IJwtGenerator jwtGenerator,
+        IPasswordManager passwordManager,
         CancellationToken cancellationToken)
     {
 
-        var foundCook = await context.Cooks.FirstOrDefaultAsync(x => x.Email == loginRequest.Email, cancellationToken);
+        var foundCook = await context.Cooks
+            .FirstOrDefaultAsync(x => x.Email.ToLower() == loginRequest.Email.ToLower(), cancellationToken);
 
-        if (foundCook is null)
+        if (foundCook is null ||
+            passwordManager.IsPasswordValid(loginRequest.Password, foundCook.PasswordHash) is false)
+        {
             return TypedResults.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 detail: $"Password is wrong or no user with email: '{loginRequest.Email}' found.");
+        }
 
         var token = jwtGenerator.GenerateJwt(foundCook.Email, foundCook.Email);
 
