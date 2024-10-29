@@ -9,12 +9,13 @@ namespace CookBook.API.Features.Ingredients;
 
 public static class IngredientsEndpoint
 {
+    private const string Path = "api/ingredients";
     public static void MapIngredients(this WebApplication app)
     {
-        var ingredients = app.MapGroup("api/ingredients").RequireAuthorization();
+        var ingredients = app.MapGroup(Path).RequireAuthorization();
 
-        ingredients.MapGet("/", GetIngredientsAsync).WithName("GetIngredientById");
-        ingredients.MapGet("/{id}", GetIngredientByIdAsync);
+        ingredients.MapGet("/", GetIngredientsAsync);
+        ingredients.MapGet("/{id}", GetIngredientByIdAsync).WithName("GetIngredientByIdAsync");
         ingredients.MapPost("/", CreateIngredientAsync).AddEndpointFilter<ValidationFilter<CreateIngredientRequest>>();
         ingredients.MapDelete("/{id}", DeleteIngredientAsync);
     }
@@ -36,11 +37,9 @@ public static class IngredientsEndpoint
         var ingredient = new Ingredient() { Name = request.Name };
 
         context.Add(ingredient);
-
         await context.SaveChangesAsync();
 
-        // TODO fix create at route location
-        return TypedResults.CreatedAtRoute(routeName: "GetIngredientById", routeValues: new { id = ingredient.Id }, value: ingredient);
+        return TypedResults.CreatedAtRoute("GetIngredientByIdAsync", new { id = ingredient.Id });
     }
 
     public static async Task<IResult> GetIngredientByIdAsync(Guid id, CookBookContext context, CancellationToken cancellationToken)
