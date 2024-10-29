@@ -9,10 +9,9 @@ namespace CookBook.API.Features.Ingredients;
 
 public static class IngredientsEndpoint
 {
-    private const string Path = "api/ingredients";
     public static void MapIngredients(this WebApplication app)
     {
-        var ingredients = app.MapGroup(Path).RequireAuthorization();
+        var ingredients = app.MapGroup("api/ingredients").RequireAuthorization();
 
         ingredients.MapGet("/", GetIngredientsAsync);
         ingredients.MapGet("/{id}", GetIngredientByIdAsync).WithName("GetIngredientByIdAsync");
