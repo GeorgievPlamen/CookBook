@@ -25,7 +25,7 @@ public class PasswordManager : IPasswordManager
         return $"{base64salt}.{base64password}";
     }
 
-    public bool IsPasswordValid(string passwordAttempt, string passwordSaltAndHash)
+    public bool IsPasswordInvalid(string passwordAttempt, string passwordSaltAndHash)
     {
         var parts = passwordSaltAndHash.Split('.');
 
@@ -44,6 +44,6 @@ public class PasswordManager : IPasswordManager
             iterationCount: 100000,
             numBytesRequested: 16));
 
-        return hashedPassword == passwordHash;
+        return hashedPassword != passwordHash;
     }
 }

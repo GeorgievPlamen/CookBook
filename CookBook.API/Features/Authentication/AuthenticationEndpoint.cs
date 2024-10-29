@@ -41,7 +41,8 @@ public static class AuthenticationEndpoint
         IPasswordManager passwordManager,
         CancellationToken cancellationToken)
     {
-        var alreadyRegisteredUser = await context.Cooks.FirstOrDefaultAsync(x => x.Email == registerRequest.Email, cancellationToken);
+        var alreadyRegisteredUser = await context.Cooks
+            .FirstOrDefaultAsync(x => x.Email == registerRequest.Email, cancellationToken);
 
         if (alreadyRegisteredUser is not null)
             return TypedResults.Problem(
@@ -78,7 +79,7 @@ public static class AuthenticationEndpoint
             .FirstOrDefaultAsync(x => x.Email.ToLower() == loginRequest.Email.ToLower(), cancellationToken);
 
         if (foundCook is null ||
-            passwordManager.IsPasswordValid(loginRequest.Password, foundCook.PasswordHash) is false)
+            passwordManager.IsPasswordInvalid(loginRequest.Password, foundCook.PasswordHash))
         {
             return TypedResults.Problem(
                 statusCode: StatusCodes.Status404NotFound,
