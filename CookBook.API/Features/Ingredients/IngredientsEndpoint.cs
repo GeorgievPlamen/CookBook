@@ -19,7 +19,10 @@ public static class IngredientsEndpoint
         ingredients.MapDelete("/{id}", DeleteIngredientAsync);
     }
 
-    public static async Task<IResult> DeleteIngredientAsync(Guid id, CookBookContext context, CancellationToken cancellationToken)
+    public static async Task<IResult> DeleteIngredientAsync(
+        Guid id,
+        CookBookContext context,
+        CancellationToken cancellationToken)
     {
         context.Ingredients.Remove(new Ingredient { Id = id });
 
@@ -41,9 +44,14 @@ public static class IngredientsEndpoint
         return TypedResults.CreatedAtRoute("GetIngredientByIdAsync", new { id = ingredient.Id });
     }
 
-    public static async Task<IResult> GetIngredientByIdAsync(Guid id, CookBookContext context, CancellationToken cancellationToken)
+    public static async Task<IResult> GetIngredientByIdAsync(
+        Guid id,
+        CookBookContext context,
+        CancellationToken cancellationToken)
         => TypedResults.Ok(await context.Ingredients.FirstOrDefaultAsync(x => x.Id == id, cancellationToken));
 
-    public static async Task<IResult> GetIngredientsAsync(CookBookContext context, CancellationToken cancellationToken)
+    public static async Task<IResult> GetIngredientsAsync(
+        CookBookContext context,
+        CancellationToken cancellationToken)
         => TypedResults.Ok(await context.Ingredients.ToListAsync(cancellationToken));
 }
