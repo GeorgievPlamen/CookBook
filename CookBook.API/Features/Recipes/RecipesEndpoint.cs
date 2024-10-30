@@ -6,7 +6,6 @@ using CookBook.API.Data.Models;
 using CookBook.API.Features.Ingredients.DTOs;
 using CookBook.API.Features.Recipes.DTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookBook.API.Features.Recipes;
@@ -20,7 +19,7 @@ public static class RecipesEndpoint
         app.MapPost("/", CreateRecipeAsync).AddEndpointFilter<ValidationFilter<CreateIngredientRequest>>();
         app.MapGet("/", GetRecipesAsync);
         app.MapGet("/{id}", GetRecipesByIdAsync).WithName("GetRecipesByIdAsync");
-        app.MapPut("/{id}", UpdateRecipeAsync);
+        app.MapPut("/{id}", UpdateRecipeAsync).AddEndpointFilter<ValidationFilter<CreateIngredientRequest>>();
         app.MapDelete("/{id}", DeleteRecipeAsync);
     }
 
@@ -59,34 +58,54 @@ public static class RecipesEndpoint
         return TypedResults.CreatedAtRoute("GetRecipesByIdAsync", recipe);
     }
 
-    public static async Task GetRecipesAsync(
+    public static async Task<IResult> GetRecipesAsync(
+        CookBookContext context,
+        CancellationToken cancellationToken)
+        => TypedResults.Ok(await context.Recipes.ToListAsync(cancellationToken));
+
+    public static async Task<IResult> GetRecipesByIdAsync(
+        Guid id,
+        CookBookContext context,
+        CancellationToken cancellationToken)
+        => TypedResults.Ok(await context.Recipes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken));
+
+    public static async Task<IResult> UpdateRecipeAsync(
+        Guid id,
+        CreateRecipeRequest request,
         CookBookContext context,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var recipe = await context.Recipes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+        if (recipe is null)
+            return TypedResults.Problem(statusCode: StatusCodes.Status404NotFound);
+
+        recipe.Name = request.Name;
+        recipe.Ingredients = request.Ingredients.ToList();
+        recipe.Instructions = request.Instructions;
+        recipe.Type = request.Type;
+        recipe.TimeToPrepare = request.TimeToPrepare;
+
+        context.Update(recipe);
+
+        await context.SaveChangesAsync();
+
+        return TypedResults.Ok(recipe);
     }
 
-    public static async Task GetRecipesByIdAsync(
+    public static async Task<IResult> DeleteRecipeAsync(
         Guid id,
         CookBookContext context,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
+        var recipe = context.Recipes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-    public static async Task UpdateRecipeAsync(
-        Guid id,
-        CookBookContext context,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+        if (recipe is not null)
+        {
+            context.Remove(recipe);
+            await context.SaveChangesAsync();
+        }
 
-    public static async Task DeleteRecipeAsync(
-        Guid id,
-        CookBookContext context,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        return TypedResults.Ok();
     }
 }
