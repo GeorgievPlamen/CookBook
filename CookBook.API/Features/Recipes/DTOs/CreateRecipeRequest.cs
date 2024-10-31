@@ -6,7 +6,7 @@ namespace CookBook.API.Features.Recipes.DTOs;
 
 public record CreateRecipeRequest(
     string Name,
-    Ingredient[] Ingredients,
+    Guid[] IngredientIds,
     string Instructions,
     TimeSpan TimeToPrepare,
     RecipeType Type);
@@ -15,7 +15,7 @@ public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeReques
 {
     public CreateRecipeRequestValidator()
     {
-        RuleFor(x => x.Ingredients)
+        RuleFor(x => x.IngredientIds)
             .NotEmpty();
 
         RuleFor(x => x.Name)
