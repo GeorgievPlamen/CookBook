@@ -9,7 +9,9 @@ public record CreateRecipeRequest(
     Guid[] IngredientIds,
     string Instructions,
     TimeSpan TimeToPrepare,
-    RecipeType Type);
+    RecipeType Type,
+    string? ImageBase64
+    );
 
 public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeRequest>
 {

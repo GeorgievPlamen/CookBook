@@ -54,6 +54,9 @@ public static class RecipesEndpoint
             Type = request.Type
         };
 
+        if (request.ImageBase64 is not null)
+            recipe.SetImageData(request.ImageBase64);
+
         context.Add(recipe);
 
         await context.SaveChangesAsync(cancellationToken);
@@ -101,8 +104,10 @@ public static class RecipesEndpoint
         recipe.Type = request.Type;
         recipe.TimeToPrepare = request.TimeToPrepare;
 
+        if (request.ImageBase64 is not null)
+            recipe.SetImageData(request.ImageBase64);
+
         context.Update(recipe);
-        // context.UpdateRange(ingredients); not sure if needed
 
         await context.SaveChangesAsync();
 

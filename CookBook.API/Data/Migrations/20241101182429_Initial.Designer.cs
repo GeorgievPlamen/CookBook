@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookBook.API.Data.Migrations
 {
     [DbContext(typeof(CookBookContext))]
-    [Migration("20241027170244_Init")]
-    partial class Init
+    [Migration("20241101182429_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,9 @@ namespace CookBook.API.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Ingredients");
                 });
 
@@ -73,10 +76,6 @@ namespace CookBook.API.Data.Migrations
 
                     b.Property<Guid>("CookId")
                         .HasColumnType("TEXT");
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("BLOB")
-                        .HasColumnName("ImageBlob");
 
                     b.Property<string>("Instructions")
                         .IsRequired()
@@ -95,6 +94,10 @@ namespace CookBook.API.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("_imageBlob")
+                        .HasColumnType("BLOB")
+                        .HasColumnName("ImageBlob");
 
                     b.HasKey("Id");
 

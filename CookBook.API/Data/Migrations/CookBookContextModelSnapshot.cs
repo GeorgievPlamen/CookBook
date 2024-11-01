@@ -74,10 +74,6 @@ namespace CookBook.API.Data.Migrations
                     b.Property<Guid>("CookId")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("BLOB")
-                        .HasColumnName("ImageBlob");
-
                     b.Property<string>("Instructions")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -95,6 +91,10 @@ namespace CookBook.API.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("_imageBlob")
+                        .HasColumnType("BLOB")
+                        .HasColumnName("ImageBlob");
 
                     b.HasKey("Id");
 
