@@ -54,11 +54,6 @@ public static class RecipesEndpoint
             Type = request.Type
         };
 
-        foreach (var ingredient in ingredients)
-            ingredient.Recipes.Add(recipe);
-
-        // Investigate why Ef core is not adding ingredients
-
         context.Add(recipe);
 
         await context.SaveChangesAsync(cancellationToken);
@@ -69,13 +64,18 @@ public static class RecipesEndpoint
     public static async Task<IResult> GetRecipesAsync(
         CookBookContext context,
         CancellationToken cancellationToken)
-        => TypedResults.Ok(await context.Recipes.ToListAsync(cancellationToken));
+        => TypedResults.Ok(
+            await context.Recipes
+                .Include(x => x.Ingredients)
+                .ToListAsync(cancellationToken));
 
     public static async Task<IResult> GetRecipesByIdAsync(
         Guid id,
         CookBookContext context,
         CancellationToken cancellationToken)
-        => TypedResults.Ok(await context.Recipes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken));
+        => TypedResults.Ok(await context.Recipes
+            .Include(x => x.Ingredients)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken));
 
     public static async Task<IResult> UpdateRecipeAsync(
         Guid id,
