@@ -26,7 +26,13 @@ builder.Services.AddSingleton<IPasswordManager, PasswordManager>();
 
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors(options =>
+{
+    options
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
