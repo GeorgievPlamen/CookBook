@@ -2,14 +2,14 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { api } from "../../api/CookBookApi";
 import { AxiosError } from "axios";
-import { JwtContext } from "../../layout/Layout";
+import { AppContext } from "../../layout/Layout";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const nav = useNavigate();
-  const { setJwt } = useContext(JwtContext);
+  const { setJwt } = useContext(AppContext);
 
   async function onSubmit(e: React.FormEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -24,7 +24,7 @@ export default function SignIn() {
       } else setError("Could not get token.");
     } catch (error) {
       const axiosError = error as AxiosError;
-      setError(axiosError.message);
+      setError(`${axiosError.message} ${axiosError.response?.statusText}`);
     }
   }
 

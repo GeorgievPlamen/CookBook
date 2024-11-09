@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { JwtContext } from "./Layout";
+import { AppContext } from "./Layout";
 
 export default function Header() {
-  const context = useContext(JwtContext);
+  const context = useContext(AppContext);
 
   const { jwt, setJwt } = context;
+  const jwtLength = jwt ? jwt.length : 0;
 
   return (
     <header className="bg-background h-12 text-white shadow-sm shadow-black">
@@ -28,7 +29,7 @@ export default function Header() {
             </NavLink>
           </li>
           <li>
-            {jwt!.length < 1 ? (
+            {jwtLength < 1 ? (
               <NavLink
                 className={({ isActive }) => `${isActive ? "underline" : null}`}
                 to="/signin"
