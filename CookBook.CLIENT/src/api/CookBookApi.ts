@@ -8,4 +8,14 @@ axios.interceptors.request.use(config => {
     return config
 })
 
+const authentication = {
+    login: (email: string, password: string) => 
+        axios.post('/authentication/login',{email,password}).then(x => x.data),
 
+    register: (name: string , email: string, password: string) => 
+        axios.post('/authentication/register',{name,email,password}).then(x => x.data)
+}
+
+export const api = {
+    authentication
+}
