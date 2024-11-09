@@ -6,7 +6,6 @@ import SignIn from "../pages/SignIn/SignIn";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
     element: <Layout />,
     errorElement: (
       <>
@@ -17,22 +16,18 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "*",
-        index: true,
         element: <Recipes />,
       },
       {
         path: "/",
-        index: true,
         element: <Recipes />,
       },
       {
         path: "/createrecipe",
-        index: true,
         element: <CreateRecipe />,
       },
       {
         path: "/signin",
-        index: true,
         element: <SignIn />,
       },
     ],
