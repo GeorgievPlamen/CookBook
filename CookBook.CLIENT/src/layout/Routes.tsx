@@ -1,9 +1,10 @@
 import { createBrowserRouter, Link } from "react-router-dom";
 import Layout from "./Layout";
 import Recipes from "../pages/Recipes/Recipes";
-import CreateRecipe from "../pages/CreateRecipe/CreateRecipe";
 import SignIn from "../pages/Account/SignIn";
 import SignUp from "../pages/Account/SignUp";
+import Recipe from "../pages/Recipes/Recipe";
+import CreateRecipe from "../pages/CreateRecipe/CreateRecipe";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Recipes />,
+      },
+      {
+        path: "/:id",
+        element: <Recipe />,
       },
       {
         path: "/createrecipe",
