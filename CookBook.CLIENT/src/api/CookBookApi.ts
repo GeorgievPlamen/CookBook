@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateRecipe, Recipe } from "../models/Recipe";
+import { CreateRecipe, PaginatedRecipe } from "../models/Recipe";
 import { CreateIngredientRequest, Ingredient } from "../models/Ingredient";
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
@@ -19,7 +19,8 @@ const authentication = {
 }
 
 const recipes = {
-    getAll: () => axios.get<Recipe[]>("/recipes").then(x => x.data),
+    getAll: (page: number, pageSize: number, searchTerm?: string) => 
+        axios.get<PaginatedRecipe>(`/recipes/?page=${page}&pageSize=${pageSize}${searchTerm ? `&searchTerm=${searchTerm}` : ""}`).then(x => x.data),
     create: (recipe: CreateRecipe) => axios.post("/recipes", recipe).then(x => x),
     delete: (id: string) => axios.delete(`/recipes/${id}`).then(x => x.data)
 }

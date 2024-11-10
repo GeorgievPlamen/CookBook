@@ -12,6 +12,13 @@ export interface Recipe {
   imageBase64?: string;
 }
 
+export interface PaginatedRecipe {
+  recipes: Recipe[],
+  totalCount: number,
+  hasNextPage: boolean,
+  hasPreviousPage: boolean
+}
+
 export interface CreateRecipe {
   name: string;
   ingredientIds: string[];
