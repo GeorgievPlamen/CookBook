@@ -9,7 +9,7 @@ export default function Header() {
   const jwtLength = jwt ? jwt.length : 0;
 
   return (
-    <header className="bg-background h-12 text-white shadow-sm shadow-black">
+    <header className="h-12 bg-background text-white shadow-sm shadow-black">
       <nav className="h-full">
         <ul className="flex h-full items-center justify-around gap-4">
           <li>
@@ -25,7 +25,7 @@ export default function Header() {
               className={({ isActive }) => `${isActive ? "underline" : null}`}
               to="/"
             >
-              Search
+              Recipes
             </NavLink>
           </li>
           <li>

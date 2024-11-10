@@ -33,7 +33,8 @@ export default function SignIn() {
       <h2 className="mb-2 text-center text-2xl font-bold">Sign in</h2>
       <div className="mb-2 flex flex-col">
         <label htmlFor="email">Email</label>
-        <input  className="rounded-lg border-2"
+        <input
+          className="rounded-lg border-2"
           type="email"
           name="email"
           onChange={(e) => setEmail(e.target.value)}
@@ -41,14 +42,15 @@ export default function SignIn() {
       </div>
       <div className="mb-2 flex flex-col">
         <label htmlFor="password">Password</label>
-        <input  className="rounded-lg border-2"
+        <input
+          className="rounded-lg border-2"
           type="password"
           name="password"
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <button
-        className="bg-background mb-1 w-full rounded-lg py-1 text-white"
+        className="mb-1 w-full rounded-lg bg-background py-1 text-white"
         type="submit"
         onClick={onSubmit}
       >
