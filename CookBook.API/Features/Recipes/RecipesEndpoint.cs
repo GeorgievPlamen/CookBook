@@ -65,12 +65,37 @@ public static class RecipesEndpoint
     }
 
     public static async Task<IResult> GetRecipesAsync(
+        int page,
+        int pageSize,
+        string? searchTerm,
         CookBookContext context,
         CancellationToken cancellationToken)
-        => TypedResults.Ok(
-            await context.Recipes
-                .Include(x => x.Ingredients)
-                .ToListAsync(cancellationToken));
+    {
+        var query = context.Recipes.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(x => x.Name.Contains(searchTerm));
+        }
+
+        var totalCount = await context.Recipes.CountAsync();
+
+        var hasNextPage = (page * pageSize) < totalCount;
+        var hasPreviousPage = page > 1;
+
+        var response = await query.Include(x => x.Ingredients)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var pageResult = new PagedRecipesResponse(
+            response,
+            totalCount,
+            hasNextPage,
+            hasPreviousPage);
+
+        return TypedResults.Ok(pageResult);
+    }
 
     public static async Task<IResult> GetRecipesByIdAsync(
         Guid id,
