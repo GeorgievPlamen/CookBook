@@ -2,7 +2,7 @@ import { Cook } from "./Cook";
 import { Ingredient } from "./Ingredient";
   
 export interface Recipe {
-  id: string;
+  id?: string;
   name: string;
   instructions: string;
   ingredients: Ingredient[];
@@ -10,4 +10,13 @@ export interface Recipe {
   timeToPrepare: string;
   cook?: Cook;
   imageBase64?: string;
+}
+
+export interface CreateRecipe {
+  name: string;
+  ingredientIds: string[];
+  instructions: string;
+  timeToPrepare: string;
+  type: number;
+  imageBase64: string;
 }

@@ -50,7 +50,7 @@ public static class RecipesEndpoint
             Name = request.Name,
             Ingredients = ingredients,
             Instructions = request.Instructions,
-            TimeToPrepare = request.TimeToPrepare,
+            TimeToPrepare = TimeSpan.Parse(request.TimeToPrepare),
             Type = request.Type
         };
 
@@ -102,7 +102,7 @@ public static class RecipesEndpoint
         recipe.Ingredients = ingredients;
         recipe.Instructions = request.Instructions;
         recipe.Type = request.Type;
-        recipe.TimeToPrepare = request.TimeToPrepare;
+        recipe.TimeToPrepare = TimeSpan.Parse(request.TimeToPrepare);
 
         if (request.ImageBase64 is not null)
             recipe.SetImageData(request.ImageBase64);

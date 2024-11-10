@@ -1,16 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Ingredient } from "../../models/Ingredient";
+import { api } from "../../api/CookBookApi";
+import { CreateRecipe as CreateRecipeRequest } from "../../models/Recipe";
 
 export default function CreateRecipe() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
-  const [file, setFile] = useState<unknown>();
+  const [fileBase64, setFileBase64] = useState<string>("");
   const [timeToPrepare, setTimeToPrepare] = useState(60);
   const [howToPrepare, setHowToPrepare] = useState("");
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [addedIngredients, setAddedIngredients] = useState<Ingredient[]>([]);
+  const [type, setType] = useState(0);
 
-  console.log(file);
+  useEffect(() => {
+    api.ingredients.getAll().then((x) => setIngredients(x));
+  }, []);
+
+  function addedIngredient() {
+    const selectedIng = ingredients.find((x) => x.id === selectedIngredient);
+
+    if (selectedIng) setAddedIngredients([...addedIngredients, selectedIng]);
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFileBase64(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function formatTimeToPrepare(timeToPrepare: number): string {
+    const hours = Math.floor(timeToPrepare / 60);
+    const minutes = timeToPrepare % 60;
+    const seconds = 0;
+
+    const hoursStr = String(hours).padStart(2, "0");
+    const minutesStr = String(minutes).padStart(2, "0");
+    const secondsStr = String(seconds).padStart(2, "0");
+
+    return `${hoursStr}:${minutesStr}:${secondsStr}`;
+  }
+
+  function handleSubmit() {
+    const recipeData: CreateRecipeRequest = {
+      name: name,
+      imageBase64: fileBase64.split("data:image/jpeg;base64,/9j/")[1],
+      timeToPrepare: formatTimeToPrepare(timeToPrepare),
+      instructions: howToPrepare,
+      ingredientIds: addedIngredients.map((x) => x.id),
+      type: Number(type),
+    };
+
+    console.log(recipeData);
+    console.log(type);
+
+    api.recipes.create(recipeData).then((x) => console.log(x));
+  }
 
   return (
     <section className="w-2/4 justify-center rounded-lg border px-4 py-2 shadow-md shadow-slate-500">
@@ -30,7 +81,7 @@ export default function CreateRecipe() {
           type="file"
           name="uploadimage"
           className="rounded-lg border-2 py-1"
-          onChange={(e) => setFile(e.target.files![0])}
+          onChange={handleFileChange}
         />
       </div>
       <div className="mx-auto mb-2 flex w-2/3 flex-col">
@@ -65,17 +116,59 @@ export default function CreateRecipe() {
             className="w-5/6 rounded-lg border-2 py-1"
           >
             <option hidden>Choose</option>
-            <option value={"asdf"}>Tomato</option>
-            <option value={"asdffsdaf"}>Egg</option>
+            {ingredients
+              .filter((x) => !addedIngredients.some((y) => y.id === x.id))
+              .map((x) => (
+                <option key={x.id} value={x.id}>
+                  {x.name}
+                </option>
+              ))}
           </select>
-          <button className="w-1/6 rounded-lg bg-background py-1 text-white">
+          <button
+            onClick={() => addedIngredient()}
+            className="w-1/6 rounded-lg bg-background py-1 text-white"
+          >
             Add
           </button>
+          {addedIngredients.map((x) => (
+            <div
+              key={x.id}
+              className="my-2 flex items-center justify-between gap-2"
+            >
+              <p className="pl-4 font-mono">{x.name}</p>
+              <button
+                onClick={() =>
+                  setAddedIngredients(
+                    addedIngredients.filter((y) => y.id !== x.id),
+                  )
+                }
+                className="w-1/6 rounded-lg bg-background py-1 text-white"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
         </div>
+      </div>
+      <div className="mx-auto mb-2 flex w-2/3 flex-col">
+        <label htmlFor="type">Type</label>
+        <select
+          name="type"
+          className="rounded-lg border-2 py-1"
+          onChange={(e) => setType(e.target.value as unknown as number)}
+        >
+          <option value={0}>Breakfast</option>
+          <option value={1}>Brunch</option>
+          <option value={2}>Lunch</option>
+          <option value={3}>Tea</option>
+          <option value={4}>Supper</option>
+          <option value={5}>Dinner</option>
+        </select>
       </div>
       <button
         className="mx-auto mb-1 mt-4 w-full rounded-lg bg-background py-1 text-white"
         type="submit"
+        onClick={handleSubmit}
       >
         Create
       </button>

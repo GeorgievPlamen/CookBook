@@ -1,4 +1,3 @@
-using CookBook.API.Data.Models;
 using CookBook.API.Data.Models.Enums;
 using FluentValidation;
 
@@ -8,7 +7,7 @@ public record CreateRecipeRequest(
     string Name,
     Guid[] IngredientIds,
     string Instructions,
-    TimeSpan TimeToPrepare,
+    string TimeToPrepare,
     RecipeType Type,
     string? ImageBase64
     );
@@ -25,8 +24,7 @@ public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeReques
             .MaximumLength(50);
 
         RuleFor(x => x.TimeToPrepare)
-            .NotEmpty()
-            .Must(x => x.TotalSeconds > 0);
+            .NotEmpty();
 
         RuleFor(x => x.Type)
             .NotEmpty()

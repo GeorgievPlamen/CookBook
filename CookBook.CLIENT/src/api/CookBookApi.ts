@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Recipe } from "../models/Recipe";
+import { CreateRecipe, Recipe } from "../models/Recipe";
+import { Ingredient } from "../models/Ingredient";
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -19,10 +20,15 @@ const authentication = {
 
 const recipes = {
     getAll: () => axios.get<Recipe[]>("/recipes").then(x => x.data),
-    create: () => axios.post("/recipes").then(x => x.data)
+    create: (recipe: CreateRecipe) => axios.post("/recipes", recipe).then(x => x.data)
+}
+
+const ingredients = {
+    getAll: () => axios.get<Ingredient[]>("/ingredients").then(x => x.data)
 }
 
 export const api = {
     authentication,
-    recipes
+    recipes,
+    ingredients
 }
