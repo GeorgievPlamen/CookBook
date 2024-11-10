@@ -20,7 +20,8 @@ const authentication = {
 
 const recipes = {
     getAll: () => axios.get<Recipe[]>("/recipes").then(x => x.data),
-    create: (recipe: CreateRecipe) => axios.post("/recipes", recipe).then(x => x)
+    create: (recipe: CreateRecipe) => axios.post("/recipes", recipe).then(x => x),
+    delete: (id: string) => axios.delete(`/recipes/${id}`).then(x => x.data)
 }
 
 const ingredients = {

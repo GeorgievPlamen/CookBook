@@ -108,7 +108,6 @@ public static class RecipesEndpoint
             recipe.SetImageData(request.ImageBase64);
 
         context.Update(recipe);
-
         await context.SaveChangesAsync();
 
         return TypedResults.Ok(recipe);
@@ -119,7 +118,7 @@ public static class RecipesEndpoint
         CookBookContext context,
         CancellationToken cancellationToken)
     {
-        var recipe = context.Recipes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var recipe = await context.Recipes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (recipe is not null)
         {
