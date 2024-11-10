@@ -42,6 +42,7 @@ export default function SignUp() {
       <div className="mb-2 flex flex-col">
         <label htmlFor="name">Name</label>
         <input
+          className="rounded-lg border-2"
           type="text"
           name="name"
           onChange={(e) => setName(e.target.value)}
@@ -50,6 +51,7 @@ export default function SignUp() {
       <div className="mb-2 flex flex-col">
         <label htmlFor="email">Email</label>
         <input
+          className="rounded-lg border-2"
           type="email"
           name="email"
           onChange={(e) => setEmail(e.target.value)}
@@ -58,6 +60,7 @@ export default function SignUp() {
       <div className="mb-2 flex flex-col">
         <label htmlFor="password">Password</label>
         <input
+          className="rounded-lg border-2"
           type="password"
           name="password"
           onChange={(e) => setPassword(e.target.value)}
@@ -66,13 +69,14 @@ export default function SignUp() {
       <div className="mb-2 flex flex-col">
         <label htmlFor="confirmPassword">Confirm</label>
         <input
+          className="rounded-lg border-2"
           type="password"
           name="confirmPassword"
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
       </div>
       <button
-        className="bg-background mb-1 w-full rounded-lg py-1 text-white"
+        className="mb-1 w-full rounded-lg bg-background py-1 text-white"
         type="submit"
         onClick={onSubmit}
       >

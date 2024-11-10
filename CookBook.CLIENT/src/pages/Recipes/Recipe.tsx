@@ -5,7 +5,6 @@ import { MapToRecipeType } from "./RecipeTypes";
 export default function Recipe() {
   const { recipe } = useContext(AppContext);
 
-  console.log(recipe);
   if (!recipe) return <p>Something went wrong</p>;
 
   return (
