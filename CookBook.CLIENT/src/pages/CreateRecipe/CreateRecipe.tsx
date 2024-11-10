@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Ingredient } from "../../models/Ingredient";
 import { api } from "../../api/CookBookApi";
 import { CreateRecipe as CreateRecipeRequest } from "../../models/Recipe";
+import { AxiosError } from "axios";
 
 export default function CreateRecipe() {
   const [error, setError] = useState("");
@@ -13,6 +14,11 @@ export default function CreateRecipe() {
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [addedIngredients, setAddedIngredients] = useState<Ingredient[]>([]);
   const [type, setType] = useState(0);
+  const [isIngredientPanelOpen, setIsIngredientPanelOpen] = useState(false);
+  const [ingredientForCreationName, setIngredientForCreationName] =
+    useState("");
+
+  console.log(ingredients);
 
   useEffect(() => {
     api.ingredients.getAll().then((x) => setIngredients(x));
@@ -47,6 +53,12 @@ export default function CreateRecipe() {
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   }
 
+  async function createIngredient() {
+    await api.ingredients.create({ name: ingredientForCreationName });
+    api.ingredients.getAll().then((x) => setIngredients(x));
+    setIsIngredientPanelOpen(false);
+  }
+
   function handleSubmit() {
     const recipeData: CreateRecipeRequest = {
       name: name,
@@ -57,14 +69,14 @@ export default function CreateRecipe() {
       type: Number(type),
     };
 
-    console.log(recipeData);
-    console.log(type);
-
-    api.recipes.create(recipeData).then((x) => console.log(x));
+    api.recipes.create(recipeData).catch((err) => {
+      const axiosErr = err as AxiosError;
+      setError(axiosErr.message);
+    });
   }
 
   return (
-    <section className="w-2/4 justify-center rounded-lg border px-4 py-2 shadow-md shadow-slate-500">
+    <section className="w-1/2 justify-center rounded-lg border px-4 py-2 shadow-md shadow-slate-500">
       <h2 className="mb-2 text-center text-2xl font-bold">Create Recipe</h2>
       <div className="mx-auto mb-2 flex w-2/3 flex-col">
         <label htmlFor="name">Name</label>
@@ -150,6 +162,32 @@ export default function CreateRecipe() {
           ))}
         </div>
       </div>
+      <div className="mx-auto flex w-2/3 items-center justify-end">
+        <button
+          onClick={() => setIsIngredientPanelOpen(!isIngredientPanelOpen)}
+          className="text-end text-xs font-light underline"
+        >
+          Missing Ingredient?
+        </button>
+      </div>
+      {isIngredientPanelOpen && (
+        <div className="mx-auto mb-2 flex w-2/3 flex-col">
+          <label htmlFor="createIngredient">Ingredient Name</label>
+          <div>
+            <input
+              onChange={(e) => setIngredientForCreationName(e.target.value)}
+              name="createIngredient"
+              className="w-5/6 rounded-lg border-2 py-1"
+            />
+            <button
+              onClick={createIngredient}
+              className="w-1/6 rounded-lg bg-background py-1 text-white"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      )}
       <div className="mx-auto mb-2 flex w-2/3 flex-col">
         <label htmlFor="type">Type</label>
         <select
