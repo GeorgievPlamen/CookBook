@@ -78,12 +78,13 @@ public static class RecipesEndpoint
             query = query.Where(x => x.Name.Contains(searchTerm));
         }
 
-        var totalCount = await context.Recipes.CountAsync();
+        var totalCount = await context.Recipes.CountAsync(cancellationToken);
 
         var hasNextPage = (page * pageSize) < totalCount;
         var hasPreviousPage = page > 1;
 
-        var response = await query.Include(x => x.Ingredients)
+        var response = await query
+            .Include(x => x.Ingredients)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);

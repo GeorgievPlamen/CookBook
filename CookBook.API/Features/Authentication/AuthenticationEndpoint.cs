@@ -29,7 +29,8 @@ public static class AuthenticationEndpoint
 
         var foundUser = await context.Cooks.FirstOrDefaultAsync(x => x.Email == emailFromClaim, cancellationToken);
 
-        if (foundUser is null) return TypedResults.Problem(statusCode: StatusCodes.Status404NotFound);
+        if (foundUser is null)
+            return TypedResults.Problem(statusCode: StatusCodes.Status404NotFound);
 
         return TypedResults.Ok(foundUser);
     }

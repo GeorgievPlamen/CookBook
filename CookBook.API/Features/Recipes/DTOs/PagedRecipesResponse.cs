@@ -1,3 +1,5 @@
+namespace CookBook.API.Features.Recipes.DTOs;
+
 using CookBook.API.Data.Models;
 
 public class PagedRecipesResponse(List<Recipe> recipes, int totalCount, bool hasNextPage, bool hasPreviousPage)
